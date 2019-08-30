@@ -1404,8 +1404,6 @@ public class PatchOperationUtil {
                     Attribute subSubAttribute  = ((ComplexAttribute) subAttribute).getSubAttribute(attributeParts[2]);
 
                     if (subSubAttribute != null) {
-                        ((SimpleAttribute) subSubAttribute).setValue(operation.getValues());
-                    } else {
                         AttributeSchema subSubAttributeSchema = SchemaUtil.getAttributeSchema(
                                 attributeParts[0] + "." + attributeParts[1] + "." + attributeParts[2], schema);
 
