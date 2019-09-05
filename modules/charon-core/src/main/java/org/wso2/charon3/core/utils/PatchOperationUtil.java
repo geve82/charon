@@ -1406,13 +1406,8 @@ public class PatchOperationUtil {
                                 }
                             }
                         }
-
                     }
-
                 } else {
-                    Attribute subSubAttribute  = ((ComplexAttribute) subAttribute).getSubAttribute(attributeParts[2]);
-
-                    if (subSubAttribute != null) {
                         AttributeSchema subSubAttributeSchema = SchemaUtil.getAttributeSchema(
                                 attributeParts[0] + "." + attributeParts[1] + "." + attributeParts[2], schema);
 
@@ -1437,24 +1432,22 @@ public class PatchOperationUtil {
                             throw new BadRequestException("No such attribute with the name : " + attributeParts[2],
                                     ResponseCodeConstants.NO_TARGET);
                         }
-                    }
                 }
-
             } else {
-                AttributeSchema subAttributeSchena =
+                AttributeSchema subAttributeSchema =
                         SchemaUtil.getAttributeSchema(attributeParts[0] + "." + attributeParts[1], schema);
 
-                if (subAttributeSchena != null) {
-                    if (subAttributeSchena.getMultiValued()) {
+                if (subAttributeSchema != null) {
+                    if (subAttributeSchema.getMultiValued()) {
 
                         MultiValuedAttribute multiValuedAttribute =
-                                new MultiValuedAttribute(subAttributeSchena.getName());
-                        DefaultAttributeFactory.createAttribute(subAttributeSchena, multiValuedAttribute);
+                                new MultiValuedAttribute(subAttributeSchema.getName());
+                        DefaultAttributeFactory.createAttribute(subAttributeSchema, multiValuedAttribute);
 
                         String complexAttributeName  =
-                              subAttributeSchena.getName() + "_" + operation.getValues() + "_" + SCIMConstants.DEFAULT;
+                              subAttributeSchema.getName() + "_" + operation.getValues() + "_" + SCIMConstants.DEFAULT;
                         ComplexAttribute complexAttribute = new ComplexAttribute(complexAttributeName);
-                        DefaultAttributeFactory.createAttribute(subAttributeSchena, complexAttribute);
+                        DefaultAttributeFactory.createAttribute(subAttributeSchema, complexAttribute);
 
                         AttributeSchema subSubAttributeSchema = SchemaUtil.getAttributeSchema(attributeParts[0] + "." +
                                 attributeParts[1] + "." + attributeParts[2], schema);
@@ -1488,8 +1481,8 @@ public class PatchOperationUtil {
                         }
 
                     } else  {
-                        ComplexAttribute complexAttribute = new ComplexAttribute(subAttributeSchena.getName());
-                        DefaultAttributeFactory.createAttribute(subAttributeSchena, complexAttribute);
+                        ComplexAttribute complexAttribute = new ComplexAttribute(subAttributeSchema.getName());
+                        DefaultAttributeFactory.createAttribute(subAttributeSchema, complexAttribute);
 
                         AttributeSchema subSubAttributeSchema = SchemaUtil.getAttributeSchema(attributeParts[0] + "." +
                                 attributeParts[1] + "." + attributeParts[2], schema);
