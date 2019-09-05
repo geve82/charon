@@ -723,7 +723,11 @@ public class JSONDecoder {
                     patchOperation.setOperation(SCIMConstants.OperationalConstants.REPLACE);
                 }
                 patchOperation.setPath((String) operation.opt(SCIMConstants.OperationalConstants.PATH));
-                patchOperation.setValues(operation.opt(SCIMConstants.OperationalConstants.VALUE));
+                
+                Object values = operation.opt(SCIMConstants.OperationalConstants.VALUE);
+                if (!JSONObject.NULL.equals(values) && values != null) {
+                    patchOperation.setValues(values);
+                }
                 operationList.add(patchOperation);
             }
         } catch (JSONException e) {
