@@ -900,10 +900,15 @@ public class PatchOperationUtil {
                     } else {
                         ((MultiValuedAttribute) attribute).deletePrimitiveValues();
                         try {
-                            JSONArray jsonArray = new JSONArray(operation.getValues());
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                ((MultiValuedAttribute) attribute).setAttributePrimitiveValue(jsonArray.get(i));
-                            }
+                            JSONArray jsonArray = new JSONArray
+                                    (new JSONTokener(operation.getValues().toString()));
+                            AttributeSchema attributeSchema = SchemaUtil.getAttributeSchema(
+                                    attribute.getName(), schema);
+                            MultiValuedAttribute newMultiValuedAttribute =
+                                    decoder.buildPrimitiveMultiValuedAttribute(
+                                            attributeSchema, jsonArray);
+                            ((MultiValuedAttribute) attribute).
+                                    setAttributePrimitiveValues(newMultiValuedAttribute.getAttributePrimitiveValues());
                         } catch (JSONException e) {
                             throw new BadRequestException(ResponseCodeConstants.INVALID_SYNTAX);
                         }
@@ -1056,11 +1061,15 @@ public class PatchOperationUtil {
                             if (subAttribute.getMultiValued()) {
                                 ((MultiValuedAttribute) subAttribute).deletePrimitiveValues();
                                 try {
-                                    JSONArray jsonArray = new JSONArray(operation.getValues());
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        ((MultiValuedAttribute) subAttribute).
-                                            setAttributePrimitiveValue(jsonArray.get(i));
-                                    }
+                                    JSONArray jsonArray = new JSONArray
+                                            (new JSONTokener(operation.getValues().toString()));
+                                    AttributeSchema attributeSchema = SchemaUtil.getAttributeSchema(
+                                            subAttribute.getName(), schema);
+                                    MultiValuedAttribute newMultiValuedAttribute = decoder
+                                            .buildPrimitiveMultiValuedAttribute(attributeSchema, jsonArray);
+                                    ((MultiValuedAttribute) subAttribute).
+                                            setAttributePrimitiveValues(newMultiValuedAttribute.
+                                                    getAttributePrimitiveValues());
                                 } catch (JSONException e) {
                                     throw new BadRequestException(ResponseCodeConstants.INVALID_SYNTAX);
                                 }
@@ -1455,10 +1464,11 @@ public class PatchOperationUtil {
                                         new MultiValuedAttribute(subSubAttributeSchema.getName());
                                 DefaultAttributeFactory.createAttribute(subSubAttributeSchema, multiValuedSubAttribute);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(operation.getValues());
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        multiValuedSubAttribute.setAttributePrimitiveValue(jsonArray.get(i));
-                                    }
+                                    JSONArray jsonArray = new JSONArray
+                                            (new JSONTokener(operation.getValues().toString()));
+                                    multiValuedSubAttribute =
+                                            decoder.buildPrimitiveMultiValuedAttribute(
+                                                    subSubAttributeSchema, jsonArray);
                                 } catch (JSONException e) {
                                     throw new BadRequestException(ResponseCodeConstants.INVALID_SYNTAX);
                                 }
@@ -1487,15 +1497,13 @@ public class PatchOperationUtil {
                         if (subSubAttributeSchema != null) {
 
                             if (subSubAttributeSchema.getMultiValued()) {
-                                MultiValuedAttribute multiValuedAttribute =
-                                        new MultiValuedAttribute(subSubAttributeSchema.getName());
-                                DefaultAttributeFactory.createAttribute(subSubAttributeSchema, multiValuedAttribute);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(operation.getValues());
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        multiValuedAttribute.setAttributePrimitiveValue(jsonArray.get(i));
-                                    }
-                                    complexAttribute.setSubAttribute(multiValuedAttribute);
+                                    JSONArray jsonArray = new JSONArray
+                                            (new JSONTokener(operation.getValues().toString()));
+                                    MultiValuedAttribute newMultiValuedAttribute =
+                                            decoder.buildPrimitiveMultiValuedAttribute(
+                                                    subSubAttributeSchema, jsonArray);
+                                    complexAttribute.setSubAttribute(newMultiValuedAttribute);
                                 } catch (JSONException e) {
                                     throw new BadRequestException(ResponseCodeConstants.INVALID_SYNTAX);
                                 }
@@ -1547,19 +1555,16 @@ public class PatchOperationUtil {
                                 attributeParts[1] + "." + attributeParts[2], schema);
                         if (subSubAttributeSchema != null) {
                             if (subSubAttributeSchema.getMultiValued()) {
-                                MultiValuedAttribute multiValuedSubAttribute =
-                                        new MultiValuedAttribute(subSubAttributeSchema.getName());
-                                DefaultAttributeFactory.createAttribute(subSubAttributeSchema, multiValuedSubAttribute);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(operation.getValues());
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                        multiValuedSubAttribute.setAttributePrimitiveValue(jsonArray.get(i));
-                                    }
+                                    JSONArray jsonArray = new JSONArray
+                                            (new JSONTokener(operation.getValues().toString()));
+                                    MultiValuedAttribute newMultiValuedAttribute =
+                                            decoder.buildPrimitiveMultiValuedAttribute(
+                                                    subSubAttributeSchema, jsonArray);
+                                    complexAttribute.setSubAttribute(newMultiValuedAttribute);
                                 } catch (JSONException e) {
                                     throw new BadRequestException(ResponseCodeConstants.INVALID_SYNTAX);
                                 }
-                                complexAttribute.setSubAttribute(multiValuedSubAttribute);
-
                             } else {
                                 SimpleAttribute simpleAttribute =
                                         new SimpleAttribute(subSubAttributeSchema.getName(), operation.getValues());
@@ -1583,15 +1588,13 @@ public class PatchOperationUtil {
                         if (subSubAttributeSchema != null) {
 
                             if (subSubAttributeSchema.getMultiValued()) {
-                                MultiValuedAttribute multiValuedAttribute =
-                                        new MultiValuedAttribute(subSubAttributeSchema.getName());
-                                DefaultAttributeFactory.createAttribute(subSubAttributeSchema, multiValuedAttribute);
                                 try {
-                                    JSONArray jsonArray = new JSONArray(operation.getValues());
-                                    for (int i = 0; i < jsonArray.length(); i++) {
-                                            multiValuedAttribute.setAttributePrimitiveValue(jsonArray.get(i));
-                                    }
-                                    complexAttribute.setSubAttribute(multiValuedAttribute);
+                                    JSONArray jsonArray = new JSONArray
+                                            (new JSONTokener(operation.getValues().toString()));
+                                    MultiValuedAttribute newMultiValuedAttribute =
+                                            decoder.buildPrimitiveMultiValuedAttribute(
+                                                    subSubAttributeSchema, jsonArray);
+                                    complexAttribute.setSubAttribute(newMultiValuedAttribute);
                                 } catch (JSONException e) {
                                     throw new BadRequestException(ResponseCodeConstants.INVALID_SYNTAX);
                                 }
